@@ -4,5 +4,13 @@
     "ghcr.io/devcontainers/features/python:1": {
       "version": "3.12"
     }
+  },
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "GitHub.copilot",
+        "Gruntfuggly.todo-tree"
+      ]
+    }
   }
 }
