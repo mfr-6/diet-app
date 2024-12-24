@@ -7,7 +7,8 @@
     }
   },
   "containerEnv": {
-    "PYTHONDONTWRITEBYTECODE": "1"
+    "PYTHONDONTWRITEBYTECODE": "1",
+    "UV_LINK_MODE": "copy"
   },
   "customizations": {
     "vscode": {
