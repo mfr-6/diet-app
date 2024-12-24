@@ -6,6 +6,9 @@
       "version": "latest"
     }
   },
+  "containerEnv": {
+    "PYTHONDONTWRITEBYTECODE": "1"
+  },
   "customizations": {
     "vscode": {
       "extensions": [
