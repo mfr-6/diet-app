@@ -1,4 +1,11 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, ConfigDict
 
-class ProductIn(BaseModel):
+#https://docs.pydantic.dev/latest/concepts/models/#arbitrary-class-instances
+
+class ProductModel(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+    id: int
+    name: str
+
+class ProductCreate(BaseModel):
     name: str

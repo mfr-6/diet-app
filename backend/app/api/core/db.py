@@ -1,20 +1,21 @@
 from typing import Generator, Annotated
 from fastapi import Depends
-from peewee import SqliteDatabase, Model
+from sqlalchemy import create_engine
+from sqlalchemy.orm import DeclarativeBase, sessionmaker, Session
 
-DATABASE = 'diet.db'
-db = SqliteDatabase(DATABASE)
+DATABASE_NAME = "diet.db"
+DATABASE_URL = f"sqlite:///{DATABASE_NAME}"
+engine = create_engine(DATABASE_URL)
+SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
-class BaseModel(Model):
-    class Meta:
-        database = db
+class Base(DeclarativeBase):
+    pass
 
-def get_session() -> Generator[SqliteDatabase, None, None]:
+def get_session() -> Generator[Session, None, None]:
+    db = SessionLocal()
     try:
-        db.connect()
         yield db
     finally:
         db.close()
 
-DbSession = Annotated[SqliteDatabase, Depends(get_session)]
-    
+DbSession = Annotated[Session, Depends(get_session)]

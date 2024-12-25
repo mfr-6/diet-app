@@ -23,3 +23,19 @@ Features:
 -> Meal
     - ingredients: List[Ingredient]
     - recipe
+
+
+
+Additional extensions:
+bierner.markdown-mermaid
+aaron-bond.better-comments
+
+Alembic commands
+
+```
+Create migration:
+alembic revision --autogenerate -m "Initial migration"
+
+Run database migration
+alembic upgrade head
+```

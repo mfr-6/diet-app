@@ -4,6 +4,12 @@
     "ghcr.io/va-h/devcontainers-features/uv:1": {
       "shellautocompletion": true,
       "version": "latest"
+    },
+    "ghcr.io/devcontainers-extra/features/ruff": {
+      "version": "latest"
+    },
+    "ghcr.io/warrenbuckley/codespace-features/sqlite": {
+      "version": "latest"
     }
   },
   "containerEnv": {
@@ -14,7 +20,11 @@
     "vscode": {
       "extensions": [
         "GitHub.copilot",
-        "Gruntfuggly.todo-tree"
+        "charliermarsh.ruff",
+        "tamasfe.even-better-toml",
+        "Gruntfuggly.todo-tree",
+        "github.vscode-github-actions",
+        "alexcvzz.vscode-sqlite"
       ]
     }
   }

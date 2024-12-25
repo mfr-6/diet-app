@@ -5,7 +5,15 @@ description = "Add your description here"
 readme = "README.md"
 requires-python = ">=3.12"
 dependencies = [
+    "alembic==1.14.0",
     "fastapi[standard]==0.115.6",
-    "peewee==3.17.8",
+    "sqlalchemy==2.0.36",
+]
+
+[dependency-groups]
+dev = [
     "pytest==8.3.4",
 ]
+
+[tool.pytest.ini_options]
+pythonpath = "app"
