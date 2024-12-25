@@ -6,7 +6,7 @@ from sqlalchemy import pool
 from alembic import context
 
 from app.api.core.db import Base, DATABASE_URL
-from app.api.products.models import Product  # noqa: F401
+from app.api.products.models import DBProduct  # noqa: F401
 
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.
