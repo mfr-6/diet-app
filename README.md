@@ -39,3 +39,10 @@ alembic revision --autogenerate -m "Initial migration"
 Run database migration
 alembic upgrade head
 ```
+Ruff commands
+```
+ruff format
+ruff check
+```
+
+TODO: Ruff github integration Lint + Formatter

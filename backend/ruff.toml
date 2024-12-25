@@ -32,8 +32,8 @@ indent-width = 4
 target-version = "py312"
 
 [lint]
-select = ["E", "F", "I"]
-ignore = []
+select = ["ALL"]#["E", "F", "I", "INP", "ERA"]
+ignore = ["D", "PT", "S", "PLR", "ERA001", "ISC001", "COM812"]
 fixable = ["ALL"]
 unfixable = []
 dummy-variable-rgx = "^(_+|(_+[a-zA-Z0-9_]*[a-zA-Z0-9]+?))$"
