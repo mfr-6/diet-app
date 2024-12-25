@@ -1,7 +1,8 @@
-from typing import Generator, Annotated
+from typing import Annotated, Generator
+
 from fastapi import Depends
 from sqlalchemy import create_engine
-from sqlalchemy.orm import DeclarativeBase, sessionmaker, Session
+from sqlalchemy.orm import DeclarativeBase, Session, sessionmaker
 
 DATABASE_NAME = "diet.db"
 DATABASE_URL = f"sqlite:///{DATABASE_NAME}"

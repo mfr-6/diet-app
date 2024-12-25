@@ -1,7 +1,10 @@
-from fastapi import APIRouter, status, HTTPException
+from fastapi import APIRouter, HTTPException, status
+
 from app.api.core.db import DbSession
+
 from .models import Product
-from .schemas import ProductModel, ProductCreate
+from .schemas import ProductCreate, ProductModel
+
 # from sqlalchemy import select
 
 router = APIRouter(prefix="/products", tags=["products"])
