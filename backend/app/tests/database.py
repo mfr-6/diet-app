@@ -25,12 +25,4 @@ def do_begin(conn):  # noqa: ANN001, ANN201
     # emit our own BEGIN
     conn.exec_driver_sql("BEGIN")
 
-TestSessionLocal = scoped_session(
-    sessionmaker(
-        autocommit=False,
-        autoflush=False,
-        bind=test_engine
-    )
-)
-
-# TODO: Add support of transactions to core.db
+TestSessionLocal = scoped_session(sessionmaker())
