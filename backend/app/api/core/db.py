@@ -15,7 +15,7 @@ class Base(DeclarativeBase):
     pass
 
 
-def get_session() -> Generator[Session, None, None]:
+def get_db_session() -> Generator[Session, None, None]:
     db = SessionLocal()
     try:
         yield db
@@ -23,4 +23,4 @@ def get_session() -> Generator[Session, None, None]:
         db.close()
 
 
-DbSession = Annotated[Session, Depends(get_session)]
+DbSession = Annotated[Session, Depends(get_db_session)]

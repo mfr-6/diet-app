@@ -12,7 +12,10 @@ dependencies = [
 
 [dependency-groups]
 dev = [
+    "factory-boy==3.3.1",
+    "faker==33.1.0",
     "pytest==8.3.4",
+    "sqlalchemy-utils>=0.41.2",
 ]
 
 [tool.pytest.ini_options]
