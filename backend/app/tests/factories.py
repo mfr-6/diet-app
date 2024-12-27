@@ -6,7 +6,7 @@ from app.api.products.models import DBProduct
 
 class BaseFactory(SQLAlchemyModelFactory):
     class Meta:
-        sqlalchemy_session = TestSessionLocal()
+        sqlalchemy_session = TestSessionLocal
         sqlalchemy_session_persistence = "commit"
 
 class ProductFactory(BaseFactory):

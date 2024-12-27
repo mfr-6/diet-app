@@ -27,7 +27,7 @@ def db() -> Generator[None, None, None]:
         drop_database(TEST_DB_URL)
 
     Base.metadata.create_all(bind=test_engine)
-    #TestSessionLocal.configure(bind=test_engine)
+    TestSessionLocal.configure(bind=test_engine)
     yield
     drop_database(TEST_DB_URL)
 
@@ -39,21 +39,16 @@ def db_session(db) -> Generator[Session, None, None]:
 
     Rollback is not working because SAVEPOINT is not working properly in pysqlite
     https://docs.sqlalchemy.org/en/20/dialects/sqlite.html#savepoint-support
-
     https://docs.sqlalchemy.org/en/14/dialects/sqlite.html#serializable-isolation-savepoints-transactional-ddl
+    https://docs.sqlalchemy.org/en/20/orm/session_transaction.html#joining-a-session-into-an-external-transaction-such-as-for-test-suites
     """
-    #connection = test_engine.connect()
-    #transaction = connection.begin()
-    #session = TestSessionLocal(bind=connection)
-
-    session = TestSessionLocal()
-    session.begin_nested()
+    connection = test_engine.connect()
+    transaction = connection.begin()
+    session = TestSessionLocal(bind=connection, join_transaction_mode="create_savepoint")
     yield session
-    session.rollback()
-    
-    #session.close()
-    #transaction.rollback()
-    #connection.close()
+    transaction.rollback()
+    TestSessionLocal.remove()
+
 
 # @pytest.fixture(scope="module")
 # def test_client(db_session: Session) -> Generator[TestClient, None, None]:
