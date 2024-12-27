@@ -3,16 +3,17 @@ from typing import Annotated
 
 from fastapi import Depends
 from sqlalchemy import create_engine
-from sqlalchemy.orm import DeclarativeBase, Session, sessionmaker
+from sqlalchemy.orm import Session, sessionmaker, declarative_base
+
 
 DATABASE_NAME = "diet.db"
 DATABASE_URL = f"sqlite:///{DATABASE_NAME}"
 engine = create_engine(DATABASE_URL)
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
-
-class Base(DeclarativeBase):
-    pass
+Base = declarative_base()
+# class Base(DeclarativeBase):
+#     pass
 
 
 def get_db_session() -> Generator[Session, None, None]:

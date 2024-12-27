@@ -15,8 +15,6 @@ from .factories import (
     ProductFactory
 )
 
-from sqlalchemy import event
-
 # https://pytest-with-eric.com/pytest-advanced/pytest-fastapi-testing/
 # + inspired by setup done in Netflix Dispatch API
 

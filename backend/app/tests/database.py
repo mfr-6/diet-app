@@ -12,6 +12,7 @@ test_engine = create_engine(
 # https://stackoverflow.com/questions/67711755/sqlalchemy-rollback-transaction-in-sqlite
 # https://docs.sqlalchemy.org/en/14/dialects/sqlite.html#serializable-isolation-savepoints-transactional-ddl
 # https://github.com/sqlalchemy/sqlalchemy/discussions/7723
+# Below events work only with SQLAlchemy below 2.0!!!!
 
 @event.listens_for(test_engine, "connect")
 def do_connect(dbapi_connection, connection_record):  # noqa: ANN001, ANN201, ARG001
