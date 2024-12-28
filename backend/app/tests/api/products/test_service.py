@@ -1,9 +1,5 @@
-from app.api.products.service import (
-    read_product,
-    read_products
-)
 from app.api.products.models import DBProduct
-
+from app.api.products.service import read_product, read_products
 
 
 def test_read_product(db_session, product) -> None:

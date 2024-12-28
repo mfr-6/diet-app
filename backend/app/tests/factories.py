@@ -1,8 +1,10 @@
-from .database import TestSessionLocal
 from factory import Sequence
 from factory.alchemy import SQLAlchemyModelFactory
 
 from app.api.products.models import DBProduct
+
+from .database import TestSessionLocal
+
 
 class BaseFactory(SQLAlchemyModelFactory):
     class Meta:

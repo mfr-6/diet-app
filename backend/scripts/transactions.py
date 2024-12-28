@@ -3,7 +3,7 @@ from sqlalchemy.orm import Session, declarative_base
 from sqlalchemy.orm import sessionmaker, scoped_session
 
 # Script that tests the rollback functionality in SQLite.
-# For some reason event listeners are not working as expected from SQLalchemy 2.0 and upwards.
+# https://stackoverflow.com/questions/67711755/sqlalchemy-rollback-transaction-in-sqlite
 
 Base = declarative_base()
 

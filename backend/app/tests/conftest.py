@@ -3,17 +3,13 @@ from collections.abc import Generator
 import pytest
 from fastapi.testclient import TestClient
 from sqlalchemy.orm import Session
-
+from sqlalchemy_utils import database_exists, drop_database
 
 from app.api.core.db import Base, get_db_session
-from app.api.products.models import DBProduct  # noqa: F401
+from app.api.products.models import DBProduct
 
-from sqlalchemy_utils import drop_database, database_exists
-from .database import TEST_DB_URL, test_engine, TestSessionLocal
-
-from .factories import (
-    ProductFactory
-)
+from .database import TEST_DB_URL, TestSessionLocal, test_engine
+from .factories import ProductFactory
 
 # https://pytest-with-eric.com/pytest-advanced/pytest-fastapi-testing/
 # + inspired by setup done in Netflix Dispatch API
@@ -32,19 +28,20 @@ def db() -> Generator[None, None, None]:
     drop_database(TEST_DB_URL)
 
 @pytest.fixture(scope="function")
-def db_session(db) -> Generator[Session, None, None]:
+def db_session(db) -> Generator[Session, None, None]: # noqa: ARG001, ANN001
     """
     Creates a new database session for each test
     with a rollback at the end of the test.
 
-    Rollback is not working because SAVEPOINT is not working properly in pysqlite
-    https://docs.sqlalchemy.org/en/20/dialects/sqlite.html#savepoint-support
-    https://docs.sqlalchemy.org/en/14/dialects/sqlite.html#serializable-isolation-savepoints-transactional-ddl
+    Refs:
     https://docs.sqlalchemy.org/en/20/orm/session_transaction.html#joining-a-session-into-an-external-transaction-such-as-for-test-suites
     """
     connection = test_engine.connect()
     transaction = connection.begin()
-    session = TestSessionLocal(bind=connection, join_transaction_mode="create_savepoint")
+    session = TestSessionLocal(
+        bind=connection,
+        join_transaction_mode="create_savepoint"
+    )
     yield session
     transaction.rollback()
     TestSessionLocal.remove()

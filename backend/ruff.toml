@@ -25,7 +25,8 @@ exclude = [
     "node_modules",
     "site-packages",
     "venv",
-    "alembic"
+    "alembic",
+    "scripts/transactions.py"
 ]
 line-length = 88
 indent-width = 4
@@ -37,6 +38,9 @@ ignore = ["D", "PT", "S", "PLR", "ISC001", "COM812", "ERA001", "TD"]
 fixable = ["ALL"]
 unfixable = []
 dummy-variable-rgx = "^(_+|(_+[a-zA-Z0-9_]*[a-zA-Z0-9]+?))$"
+
+[lint.per-file-ignores]
+"app/tests/**/test_*" = ["ANN001"] # Ignore missing annotations for pytest fixtures in tests
 
 [format]
 quote-style = "double"
