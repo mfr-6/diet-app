@@ -11,10 +11,13 @@ class BaseFactory(SQLAlchemyModelFactory):
         sqlalchemy_session = TestSessionLocal
         sqlalchemy_session_persistence = "commit"
 
+
 class ProductFactory(BaseFactory):
     """Diet API Product Factory"""
+
     name = Sequence(lambda n: f"Product-{n}")
+
     class Meta:
         """Factory Configuration"""
-        model = DBProduct
 
+        model = DBProduct

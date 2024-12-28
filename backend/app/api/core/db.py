@@ -10,6 +10,7 @@ DATABASE_URL = f"sqlite:///{DATABASE_NAME}"
 engine = create_engine(DATABASE_URL)
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
+
 class Base(DeclarativeBase):
     pass
 
