@@ -11,3 +11,7 @@ class Product(BaseModel):
 
 class ProductCreate(BaseModel):
     name: str
+
+
+class ProductReplace(BaseModel):
+    name: str
