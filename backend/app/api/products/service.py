@@ -3,7 +3,7 @@ from sqlalchemy import select
 from app.api.core.db import DbSession
 
 from .models import DBProduct
-from .schemas import ProductCreate
+from .schemas import ProductCreate, ProductReplace
 
 
 class ProductNotFoundError(Exception):
@@ -35,6 +35,19 @@ def db_create_product(db_session: DbSession, product: ProductCreate) -> DBProduc
     db_session.commit()
 
     return db_product
+
+
+def db_replace_product(
+    db_session: DbSession, product_id: int, product: ProductReplace
+) -> DBProduct:
+    db_product = db_read_product(db_session, product_id)
+    new_product = DBProduct(id=product_id, **product.model_dump())
+
+    db_session.delete(db_product)
+    db_session.add(new_product)
+    db_session.commit()
+
+    return new_product
 
 
 def db_delete_product(db_session: DbSession, product_id: int) -> None:

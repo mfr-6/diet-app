@@ -1,7 +1,7 @@
 import pytest
 
 from app.api.products.models import DBProduct
-from app.api.products.schemas import ProductCreate
+from app.api.products.schemas import ProductCreate, ProductReplace
 from app.api.products.service import (
     ProductNotFoundError,
     db_create_product,
@@ -9,6 +9,7 @@ from app.api.products.service import (
     db_find_product,
     db_read_product,
     db_read_products,
+    db_replace_product,
 )
 
 
@@ -66,9 +67,18 @@ def test_db_create_product(db_session) -> None:
     assert db_product.name == product.name
 
 
-# def test_db_update_product(db_session, product) -> None:
-# TODO:
-#    pass
+def test_db_replace_product(db_session, product) -> None:
+    new_product = ProductReplace(name="replaced name")
+    replaced_product = db_replace_product(db_session, product.id, new_product)
+
+    assert replaced_product.id == product.id
+    assert replaced_product.name == new_product.name
+
+
+def test_db_update_product_not_found(db_session) -> None:
+    new_product = ProductReplace(name="replaced name")
+    with pytest.raises(ProductNotFoundError, match="Product not found"):
+        db_replace_product(db_session, 999, new_product)
 
 
 def test_db_delete_product(db_session) -> None:
