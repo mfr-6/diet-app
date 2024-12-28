@@ -1,18 +1,18 @@
 from sqlalchemy import create_engine, event
+from sqlalchemy.orm import scoped_session, sessionmaker
 from sqlalchemy.pool import StaticPool
-from sqlalchemy.orm import sessionmaker, scoped_session
-
-
 
 TEST_DB_URL = "sqlite:///test_db.db"
 test_engine = create_engine(
     TEST_DB_URL, connect_args={"check_same_thread": False}, poolclass=StaticPool
 )
 
-# https://stackoverflow.com/questions/67711755/sqlalchemy-rollback-transaction-in-sqlite
-# https://docs.sqlalchemy.org/en/14/dialects/sqlite.html#serializable-isolation-savepoints-transactional-ddl
+# Refs:
+# https://docs.sqlalchemy.org/en/20/dialects/sqlite.html#savepoint-support
+# https://docs.sqlalchemy.org/en/20/dialects/sqlite.html#serializable-isolation-savepoints-transactional-ddl
 # https://github.com/sqlalchemy/sqlalchemy/discussions/7723
-# Below events work only with SQLAlchemy below 2.0!!!!
+# https://docs.sqlalchemy.org/en/20/orm/session_transaction.html#joining-a-session-into-an-external-transaction-such-as-for-test-suites
+
 
 @event.listens_for(test_engine, "connect")
 def do_connect(dbapi_connection, connection_record):  # noqa: ANN001, ANN201, ARG001
