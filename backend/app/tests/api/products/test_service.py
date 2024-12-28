@@ -21,9 +21,8 @@ def test_db_find_product(db_session, product) -> None:
 
 
 def test_db_find_product_not_found(db_session) -> None:
-    db_product = db_find_product(db_session, 999)
-
-    assert db_product is None
+    with pytest.raises(ProductNotFoundError, match="Product not found"):
+        db_find_product(db_session, 999)
 
 
 def test_db_read_product(db_session, product) -> None:
@@ -35,9 +34,8 @@ def test_db_read_product(db_session, product) -> None:
 
 
 def test_db_read_product_not_found(db_session) -> None:
-    db_product = db_read_product(db_session, 999)
-
-    assert db_product is None
+    with pytest.raises(ProductNotFoundError, match="Product not found"):
+        db_read_product(db_session, 999)
 
 
 def test_db_read_products(db_session, products) -> None:
@@ -79,8 +77,8 @@ def test_db_delete_product(db_session) -> None:
     assert db_product.id is not None
 
     db_delete_product(db_session, db_product.id)
-    db_product = db_read_product(db_session, db_product.id)
-    assert db_product is None
+    with pytest.raises(ProductNotFoundError, match="Product not found"):
+        db_read_product(db_session, db_product.id)
 
 
 def test_db_delete_product_not_found(db_session) -> None:

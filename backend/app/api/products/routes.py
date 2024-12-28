@@ -4,41 +4,32 @@ from app.api.core.db import DbSession
 
 from .models import DBProduct
 from .schemas import Product, ProductCreate
+from .service import (
+    ProductNotFoundError,
+    db_create_product,
+    db_delete_product,
+    db_find_product,
+    db_read_product,
+    db_read_products,
+)
 
-# from sqlalchemy import select
 
 router = APIRouter(prefix="/products", tags=["products"])
 
 
 @router.get("/")
 def read_products(db: DbSession) -> list[Product]:
-    # https://docs.sqlalchemy.org/en/20/orm/queryguide/select.html
-    # statement = select(Product)
-    # products = db.execute(statement).all()
-    # products = db.get(Product)
-    products = db.query(DBProduct).all()
+    products = db_read_products(db)
     return [Product.model_validate(product) for product in products]
-    # return [
-    #     {
-    #         "name": "apple",
-    #         "price": 1.0
-    #     },
-    #     {
-    #         "name": "banana",
-    #         "price": 0.5
-    #     }
-    # ]
 
 
 @router.get("/{product_id}")
 def read_product(db: DbSession, product_id: int) -> Product:
-    product = db.get(DBProduct, product_id)
-    return Product.model_validate(product)
-    # return {
-    #     "id": product_id,
-    #     "name": "apple",
-    #     "price": 1.0
-    # }
+    try:
+        product = db_read_product(db, product_id)
+    except ProductNotFoundError as err:
+        raise HTTPException(status_code=404, detail="Product not found") from err
+    return product
 
 
 @router.post("/", status_code=status.HTTP_201_CREATED)

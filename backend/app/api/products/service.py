@@ -13,7 +13,11 @@ class ProductNotFoundError(Exception):
 def db_find_product(db_session: DbSession, product_id: int) -> DBProduct:
     # statement = select(DBProduct).where(DBProduct.id == product_id)
     # return db_session.execute(statement).scalars().first()
-    return db_session.get(DBProduct, product_id)
+    product = db_session.get(DBProduct, product_id)
+    if product is None:
+        msg = "Product not found"
+        raise ProductNotFoundError(msg)
+    return product
 
 
 def db_read_product(db_session: DbSession, product_id: int) -> DBProduct:
@@ -35,8 +39,5 @@ def db_create_product(db_session: DbSession, product: ProductCreate) -> DBProduc
 
 def db_delete_product(db_session: DbSession, product_id: int) -> None:
     db_product = db_find_product(db_session, product_id)
-    if db_product is None:
-        msg = "Product not found"
-        raise ProductNotFoundError(msg)
     db_session.delete(db_product)
     db_session.commit()
