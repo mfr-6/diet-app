@@ -14,6 +14,7 @@ from .factories import ProductFactory
 # https://pytest-with-eric.com/pytest-advanced/pytest-fastapi-testing/
 # + inspired by setup done in Netflix Dispatch API
 
+
 @pytest.fixture(scope="session")
 def db() -> Generator[None, None, None]:
     """
@@ -27,8 +28,9 @@ def db() -> Generator[None, None, None]:
     yield
     drop_database(TEST_DB_URL)
 
+
 @pytest.fixture(scope="function")
-def db_session(db) -> Generator[Session, None, None]: # noqa: ARG001, ANN001
+def db_session(db) -> Generator[Session, None, None]:  # noqa: ARG001, ANN001
     """
     Creates a new database session for each test
     with a rollback at the end of the test.
@@ -39,8 +41,7 @@ def db_session(db) -> Generator[Session, None, None]: # noqa: ARG001, ANN001
     connection = test_engine.connect()
     transaction = connection.begin()
     session = TestSessionLocal(
-        bind=connection,
-        join_transaction_mode="create_savepoint"
+        bind=connection, join_transaction_mode="create_savepoint"
     )
     yield session
     transaction.rollback()
@@ -61,10 +62,12 @@ def db_session(db) -> Generator[Session, None, None]: # noqa: ARG001, ANN001
 #     with TestClient(app) as client:
 #         yield client
 
+
 @pytest.fixture
 def product(db_session: Session) -> DBProduct:  # noqa: ARG001
     return ProductFactory()
 
+
 @pytest.fixture
 def products(db_session: Session) -> list[DBProduct]:  # noqa: ARG001
-    return [ProductFactory() for _ in range(2)]
+    return [ProductFactory() for _ in range(3)]

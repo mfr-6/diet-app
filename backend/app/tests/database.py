@@ -20,9 +20,11 @@ def do_connect(dbapi_connection, connection_record):  # noqa: ANN001, ANN201, AR
     # also stops it from emitting COMMIT before any DDL.
     dbapi_connection.isolation_level = None
 
+
 @event.listens_for(test_engine, "begin")
 def do_begin(conn):  # noqa: ANN001, ANN201
     # emit our own BEGIN
     conn.exec_driver_sql("BEGIN")
+
 
 TestSessionLocal = scoped_session(sessionmaker())
