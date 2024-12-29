@@ -3,7 +3,7 @@ from fastapi import APIRouter, HTTPException, status
 from app.api.core.db import DbSession
 
 from .models import DBProduct
-from .schemas import Product, ProductCreate
+from .schemas import Product, ProductCreate, ProductUpdate
 from .service import (
     ProductNotFoundError,
     db_create_product,
@@ -11,48 +11,45 @@ from .service import (
     db_find_product,
     db_read_product,
     db_read_products,
+    db_update_product,
 )
-
 
 router = APIRouter(prefix="/products", tags=["products"])
 
 
-@router.get("/")
+@router.get("/", status_code=status.HTTP_200_OK)
 def read_products(db: DbSession) -> list[Product]:
-    products = db_read_products(db)
-    return [Product.model_validate(product) for product in products]
+    db_products = db_read_products(db)
+    return [Product.model_validate(product) for product in db_products]
 
 
-@router.get("/{product_id}")
+@router.get("/{product_id}", status_code=status.HTTP_200_OK)
 def read_product(db: DbSession, product_id: int) -> Product:
     try:
-        product = db_read_product(db, product_id)
+        db_product = db_read_product(db, product_id)
     except ProductNotFoundError as err:
-        raise HTTPException(status_code=404, detail="Product not found") from err
-    return product
-
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Product not found") from err
+    return Product.model_validate(db_product)
 
 @router.post("/", status_code=status.HTTP_201_CREATED)
 def create_product(db: DbSession, product: ProductCreate) -> Product:
-    product = DBProduct(**product.model_dump())
-
-    db.add(product)
-    db.commit()
-    db.refresh(product)
-
-    return Product.model_validate(product)
-
-    # {"id": product.id, "name": product.name}
+    db_product = db_create_product(db, product)
+    return Product.model_validate(db_product)
 
 
-@router.delete("/{product_id}", status_code=status.HTTP_200_OK)
-def delete_product(db: DbSession, product_id: int) -> dict:
-    product = db.get(DBProduct, product_id)
+@router.put("/{product_id}", status_code=status.HTTP_201_CREATED)
+def update_product(db: DbSession, product_id: int, product: ProductUpdate) -> Product:
+    try:
+        updated_product = db_update_product(db, product_id, product)
+    except ProductNotFoundError as ex:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Product not found") from ex
 
-    if not product:
-        raise HTTPException(status_code=404, detail="Product not found")
+    return Product.model_validate(updated_product)
 
-    db.delete(product)
-    db.commit()
 
-    return {}
+@router.delete("/{product_id}", status_code=status.HTTP_204_NO_CONTENT)
+def delete_product(db: DbSession, product_id: int) -> None:
+    try:
+        db_delete_product(db, product_id)
+    except ProductNotFoundError as ex:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Product not found") from ex

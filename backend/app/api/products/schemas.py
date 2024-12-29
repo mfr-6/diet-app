@@ -13,5 +13,5 @@ class ProductCreate(BaseModel):
     name: str
 
 
-class ProductReplace(BaseModel):
+class ProductUpdate(BaseModel):
     name: str
