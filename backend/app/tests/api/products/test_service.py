@@ -83,7 +83,7 @@ def test_db_update_product_not_found(db_session) -> None:
 
 def test_db_delete_product(db_session) -> None:
     product = ProductCreate(name="test delete product")
-    #TODO: USE SQLALCHEMY DIRECTLY INSTEAD OF db_create_product
+    # TODO: USE SQLALCHEMY DIRECTLY INSTEAD OF db_create_product
     db_product = db_create_product(db_session, product)
     assert db_product.id is not None
 
