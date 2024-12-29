@@ -1,4 +1,5 @@
 from collections.abc import Generator
+from unittest.mock import Mock
 
 import pytest
 from fastapi.testclient import TestClient
@@ -10,9 +11,6 @@ from app.api.products.models import DBProduct
 
 from .database import TEST_DB_URL, TestSessionLocal, test_engine
 from .factories import ProductFactory
-
-from unittest.mock import Mock
-
 
 # https://pytest-with-eric.com/pytest-advanced/pytest-fastapi-testing/
 # + inspired by setup done in Netflix Dispatch API

@@ -2,13 +2,11 @@ from fastapi import APIRouter, HTTPException, status
 
 from app.api.core.db import DbSession
 
-from .models import DBProduct
 from .schemas import Product, ProductCreate, ProductUpdate
 from .service import (
     ProductNotFoundError,
     db_create_product,
     db_delete_product,
-    db_find_product,
     db_read_product,
     db_read_products,
     db_update_product,
@@ -28,8 +26,11 @@ def read_product(db: DbSession, product_id: int) -> Product:
     try:
         db_product = db_read_product(db, product_id)
     except ProductNotFoundError as err:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Product not found") from err
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND, detail="Product not found"
+        ) from err
     return Product.model_validate(db_product)
+
 
 @router.post("/", status_code=status.HTTP_201_CREATED)
 def create_product(db: DbSession, product: ProductCreate) -> Product:
@@ -42,7 +43,9 @@ def update_product(db: DbSession, product_id: int, product: ProductUpdate) -> Pr
     try:
         updated_product = db_update_product(db, product_id, product)
     except ProductNotFoundError as ex:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Product not found") from ex
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND, detail="Product not found"
+        ) from ex
 
     return Product.model_validate(updated_product)
 
@@ -52,4 +55,6 @@ def delete_product(db: DbSession, product_id: int) -> None:
     try:
         db_delete_product(db, product_id)
     except ProductNotFoundError as ex:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Product not found") from ex
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND, detail="Product not found"
+        ) from ex
