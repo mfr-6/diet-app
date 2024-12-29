@@ -11,6 +11,9 @@ from app.api.products.models import DBProduct
 from .database import TEST_DB_URL, TestSessionLocal, test_engine
 from .factories import ProductFactory
 
+from unittest.mock import Mock
+
+
 # https://pytest-with-eric.com/pytest-advanced/pytest-fastapi-testing/
 # + inspired by setup done in Netflix Dispatch API
 
@@ -48,19 +51,24 @@ def db_session(db) -> Generator[Session, None, None]:  # noqa: ARG001, ANN001
     TestSessionLocal.remove()
 
 
-# @pytest.fixture(scope="module")
-# def test_client(db_session: Session) -> Generator[TestClient, None, None]:
-#     def override_get_db_session() -> Generator[Session, None, None]:
-#         try:
-#             yield db_session
-#         finally:
-#             db_session.close()
+@pytest.fixture(scope="module")
+def mock_db_session() -> Generator[Mock, None, None]:
+    yield Mock()
 
-#     from app.main import app
 
-#     app.dependency_overrides[get_db_session] = override_get_db_session
-#     with TestClient(app) as client:
-#         yield client
+@pytest.fixture(scope="module")
+def test_client(mock_db_session: Mock) -> Generator[TestClient, None, None]:
+    def override_get_db_session() -> Generator[Session, None, None]:
+        try:
+            yield mock_db_session
+        finally:
+            mock_db_session.close()
+
+    from app.main import app
+
+    app.dependency_overrides[get_db_session] = override_get_db_session
+    with TestClient(app) as client:
+        yield client
 
 
 @pytest.fixture

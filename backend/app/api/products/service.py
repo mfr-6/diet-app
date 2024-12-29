@@ -3,7 +3,7 @@ from sqlalchemy import select
 from app.api.core.db import DbSession
 
 from .models import DBProduct
-from .schemas import ProductCreate, ProductReplace
+from .schemas import ProductCreate, ProductUpdate
 
 
 class ProductNotFoundError(Exception):
@@ -11,8 +11,6 @@ class ProductNotFoundError(Exception):
 
 
 def db_find_product(db_session: DbSession, product_id: int) -> DBProduct:
-    # statement = select(DBProduct).where(DBProduct.id == product_id)
-    # return db_session.execute(statement).scalars().first()
     product = db_session.get(DBProduct, product_id)
     if product is None:
         msg = "Product not found"
@@ -37,8 +35,8 @@ def db_create_product(db_session: DbSession, product: ProductCreate) -> DBProduc
     return db_product
 
 
-def db_replace_product(
-    db_session: DbSession, product_id: int, product: ProductReplace
+def db_update_product(
+    db_session: DbSession, product_id: int, product: ProductUpdate
 ) -> DBProduct:
     db_product = db_read_product(db_session, product_id)
     new_product = DBProduct(id=product_id, **product.model_dump())
