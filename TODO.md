@@ -2,7 +2,7 @@ PROJECT:
 TODO: Makefile commands (ruff check, format, etc)
 TODO: UV SYNC - without "dev" in image/container
 TODO: Create sqlite db at startup + migrations if not created. (????)
-TODO: Dependabot
+TODO: Dependabot (uv not supported yet - will be available in Q1)
 TODO: Alembic naming convention -> https://github.com/zhanymkanov/fastapi-best-practices?tab=readme-ov-file#migrations-alembic
 BACKEND:
 TODO: Code coverage
