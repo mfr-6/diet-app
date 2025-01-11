@@ -1,6 +1,6 @@
 PROJECT:
 TODO: Makefile commands (ruff check, format, etc)
-TODO: Ruff github integration Lint + Formatter
+TODO: UV SYNC - without "dev" in image/container
 TODO: Create sqlite db at startup + migrations if not created. (????)
 TODO: Dependabot
 TODO: Alembic naming convention -> https://github.com/zhanymkanov/fastapi-best-practices?tab=readme-ov-file#migrations-alembic
@@ -18,9 +18,6 @@ TODO: CORS for frontend.
     TODO: Tests for each service function should query test database to see if operation was performed properly: https://github.com/igorbenav/fastcrud/blob/main/tests/sqlalchemy/crud/test_get.py
 ///////////////////////////////////////////////
     API:
-    TODO: CRUD with tests
-    TODO: assert_called_once_with() -> find a way to access db: DbSession (test_routes.py)
-    TODO: assert_called_once_with() -> in test_service.py
     TODO: Ensure HTTP_204 is returned on successful delete request
 
 FRONTEND:
