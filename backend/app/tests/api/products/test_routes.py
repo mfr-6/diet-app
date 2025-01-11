@@ -83,8 +83,7 @@ def test_create_product(test_client) -> None:
         response = test_client.post("/api/v1/products/", json=product_body)
         db_session = mock_db_create_product.call_args[0][0]
         mock_db_create_product.assert_called_once_with(
-            db_session,
-            ProductCreate(**product_body)
+            db_session, ProductCreate(**product_body)
         )
 
     assert response.status_code == 201
@@ -142,14 +141,11 @@ def test_update_product_when_target_product_present(test_client) -> None:
         "app.api.products.routes.db_update_product", return_value=updated_product
     ) as mock_db_update_product:
         response = test_client.put(
-            f"/api/v1/products/{test_product_id}",
-            json=product_body
+            f"/api/v1/products/{test_product_id}", json=product_body
         )
         db_session = mock_db_update_product.call_args[0][0]
         mock_db_update_product.assert_called_once_with(
-            db_session,
-            test_product_id,
-            ProductUpdate(**product_body)
+            db_session, test_product_id, ProductUpdate(**product_body)
         )
 
     assert response.status_code == 201
