@@ -27,6 +27,12 @@ def test_db_find_product_not_found(db_session) -> None:
         db_find_product(db_session, 999)
 
 
+@pytest.mark.parametrize("invalid_id", [-1, 0, 999999])
+def test_db_find_product_invalid_ids(db_session, invalid_id) -> None:
+    with pytest.raises(ProductNotFoundError, match="Product not found"):
+        db_find_product(db_session, invalid_id)
+
+
 def test_db_read_product(db_session, product) -> None:
     db_product = db_read_product(db_session, product.id)
 
@@ -77,6 +83,23 @@ def test_db_create_product(db_session) -> None:
     assert db_product.name == product.name
 
 
+@pytest.mark.parametrize(
+    "product_name",
+    [
+        "",  # empty string
+        "a" * 256,  # very long name
+        " leading space",
+        "trailing space ",
+        "Special @#$% chars",
+    ],
+)
+def test_db_create_product_boundary_names(db_session, product_name) -> None:
+    product = ProductCreate(name=product_name)
+    db_product = db_create_product(db_session, product)
+    assert db_product.name == product_name
+
+
+# db_update_product tests
 def test_db_update_product(db_session) -> None:
     original_product = DBProduct(name="original name")
     db_session.add(original_product)
@@ -101,6 +124,30 @@ def test_db_update_product_not_found(db_session) -> None:
         db_update_product(db_session, 999, new_product)
 
 
+def test_db_update_product_preserves_other_fields(db_session) -> None:
+    # Create product with only valid fields
+    original_product = DBProduct(name="original name")
+    db_session.add(original_product)
+    db_session.commit()
+
+    # Store the original ID
+    original_id = original_product.id
+
+    # Update only the name
+    update_data = ProductUpdate(name="new name")
+    updated_product = db_update_product(db_session, original_product.id, update_data)
+
+    # Verify name was updated but ID remained unchanged
+    assert updated_product.name == "new name"
+    assert updated_product.id == original_id
+
+    # Verify in database
+    result = db_session.execute(select(DBProduct).where(DBProduct.id == original_id))
+    db_product = result.scalar_one()
+    assert db_product.name == "new name"
+    assert db_product.id == original_id
+
+
 def test_db_delete_product(db_session) -> None:
     product = DBProduct(name="test delete product")
     db_session.add(product)
@@ -114,9 +161,3 @@ def test_db_delete_product(db_session) -> None:
 def test_db_delete_product_not_found(db_session) -> None:
     with pytest.raises(ProductNotFoundError, match="Product not found"):
         db_delete_product(db_session, 999)
-
-
-@pytest.mark.parametrize("invalid_id", [-1, 0, 999999])
-def test_db_find_product_invalid_ids(db_session, invalid_id) -> None:
-    with pytest.raises(ProductNotFoundError, match="Product not found"):
-        db_find_product(db_session, invalid_id)
